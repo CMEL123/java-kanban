@@ -72,9 +72,10 @@ public class Main {
         /*
         manager.deleteAllTasks();
         manager.deleteAllEpics();
+        */
         manager.deleteAllSubtasks();
         System.out.println(manager.toString());
-        */
+
 
         System.out.println("Test8: Получение по идентификатору.");
 
@@ -104,8 +105,8 @@ public class Main {
 
 
         System.out.println("Test11: Получение списка всех подзадач определённого эпика.");
-        System.out.println(manager.getSubtaskByEpic(e1));
-
+        System.out.println(manager.getSubtaskByEpic(e1.getIdTask()));
+        System.out.println(manager.getSubtaskByEpic(123));
         printDivider();
 
     }

@@ -36,11 +36,13 @@ public class TaskManager {
             newTask.setSubtasks(new ArrayList<Integer>());
         }else if (task.getTypeTask() == TypeTask.SUBTASK){
             Subtask newTask = (Subtask)task;
-            allSubtask.put(task.getIdTask(), newTask);
-            //Мне сказали что подзадача без уже добавленного эпика не может быть
-            //Поэтому добавления\проверки Epicи не будет
-            allEpic.get(newTask.getEpicId()).addSubTask(newTask);
-            updateEpicStatus(newTask.getEpicId());
+            //Если в allEpic нет эпика с id, который указан в новой подзадаче,
+            // то надо без сохранения завершать метод через return
+            if (allEpic.containsKey(newTask.getEpicId())) {
+                allSubtask.put(task.getIdTask(), newTask);
+                allEpic.get(newTask.getEpicId()).addSubTask(newTask);
+                updateEpicStatus(newTask.getEpicId());
+            }
         }
 
         return task;
@@ -61,14 +63,18 @@ public class TaskManager {
 
     //Удаление всех задач
     public void deleteAllTasks(){
-        allTask = new HashMap<Integer, Task>();
+        allTask.clear();
     }
     public void deleteAllEpics(){
-        deleteAllSubtasks();
-        allEpic = new HashMap<Integer, Epic>();
+        allSubtask.clear();
+        allEpic.clear();
     }
     public void deleteAllSubtasks(){
-        allSubtask = new HashMap<Integer, Subtask>();
+        for (Epic epic : allEpic.values() ) {
+            epic.clearSubtasks();
+            epic.setStatus(Status.NEW);
+        }
+        allSubtask.clear();
     }
 
 
@@ -127,10 +133,13 @@ public class TaskManager {
     }
 
     //Получение списка всех подзадач определённого эпика.
-    public ArrayList<Subtask> getSubtaskByEpic(Epic epic) {
+    public ArrayList<Subtask> getSubtaskByEpic(int epicID) {
+        Epic epic = allEpic.get(epicID);
         ArrayList<Subtask> subtasks = new ArrayList<>();
-        for (int subtaskId : epic.getSubtasks()) {
-            subtasks.add(allSubtask.get(subtaskId));
+        if (epic != null) {
+            for (int subtaskId : epic.getSubtasks()) {
+                subtasks.add(allSubtask.get(subtaskId));
+            }
         }
         return subtasks;
     }
