@@ -2,7 +2,7 @@ import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
-import service.TaskManager;
+import service.InMemoryTaskManager;
 
 public class Main {
 
@@ -10,6 +10,8 @@ public class Main {
         System.out.println("Test1");
         Task t1 = new Task("Задача1", "Задача1d", 1234);
         Task t2 = new Task("Задача2", "Задача2d", 12345, Status.IN_PROGRESS);
+
+        System.out.println(t1.getClass());
 
         System.out.println(t1.toString());
         System.out.println(t2.toString());
@@ -38,7 +40,7 @@ public class Main {
         printDivider();
         System.out.println("Test4");
 
-        TaskManager manager = new TaskManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
         System.out.println(manager.toString());
 
         System.out.println("Test5: Добавление + Печать");
@@ -84,7 +86,8 @@ public class Main {
         System.out.println(manager.getTaskById(3));
         System.out.println(manager.getTaskById(4));
         System.out.println(manager.getTaskById(5));
-
+        System.out.println();
+        System.out.println(manager.toString());
         printDivider();
 
         //Не очень понял, как это должно работать,
