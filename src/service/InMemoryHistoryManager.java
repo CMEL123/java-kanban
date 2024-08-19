@@ -6,17 +6,18 @@ import model.Task;
 import java.util.ArrayList;
 
 public class InMemoryHistoryManager  implements HistoryManager {
-    public ArrayList<Task> history = new ArrayList<>(10);
+    private static final int MAX_HISTORY_VALUE = 10;
+    public ArrayList<Task> history = new ArrayList<>(MAX_HISTORY_VALUE);
 
     @Override
     public void add(Task task) {
-        if (history.size() == 10 ) history.removeFirst();
+        if (history.size() == MAX_HISTORY_VALUE ) history.removeFirst();
         history.add(task);
     }
 
     @Override
     public ArrayList<Task> getHistory() {
-        return history;
+        return new ArrayList<>(history);
     }
 
     @Override

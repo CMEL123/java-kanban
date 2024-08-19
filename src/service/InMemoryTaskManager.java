@@ -8,25 +8,20 @@ import java.util.ArrayList;
 public class InMemoryTaskManager implements TaskManager {
     private int identifier = 0;
 
-    HashMap<Integer, Task> allTask;
-    HashMap<Integer, Epic> allEpic;
-    HashMap<Integer, Subtask> allSubtask;
-
-
-    private final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+    private final HashMap<Integer, Task> allTask;
+    private final HashMap<Integer, Epic> allEpic;
+    private final HashMap<Integer, Subtask> allSubtask;
+    private final HistoryManager historyManager;
 
     public InMemoryTaskManager() {
         allTask    =  new HashMap<Integer, Task>();
         allEpic    =  new HashMap<Integer, Epic>();
         allSubtask =  new HashMap<Integer, Subtask>();
+        historyManager = new InMemoryHistoryManager();
     }
 
     private int getIdentifier(){
         return identifier++;
-    }
-
-    public InMemoryHistoryManager getHistoryManager() {
-        return historyManager;
     }
 
     @Override
@@ -36,7 +31,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Создание. Сам объект должен передаваться в качестве параметра.
     @Override
-    public Task addTask(Task task){
+    public void addTask(Task task){
         task.setIdTask(getIdentifier());
         if (task.getTypeTask() == TypeTask.TASK) {
             allTask.put(task.getIdTask(), task);
@@ -56,8 +51,6 @@ public class InMemoryTaskManager implements TaskManager {
                 updateEpicStatus(newTask.getEpicId());
             }
         }
-
-        return task;
     }
 
     //получать задачи по типу
@@ -195,14 +188,14 @@ public class InMemoryTaskManager implements TaskManager {
             editEpic.setStatus(Status.NEW);
             return ;
         }
-        Status new_status = Status.NEW;
+        Status newStatus = Status.NEW;
         for (int subtaskId : editEpic.getSubtasks()) {
             if ( allSubtask.get(subtaskId).getStatus() != Status.NEW){
-                new_status = Status.IN_PROGRESS;
+                newStatus = Status.IN_PROGRESS;
                 break;
             }
         }
-        if (new_status == Status.NEW) {
+        if (newStatus == Status.NEW) {
             editEpic.setStatus(Status.NEW);
             return ;
         }

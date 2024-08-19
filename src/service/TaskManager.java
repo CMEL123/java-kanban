@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public interface TaskManager {
 
     //Создание. Сам объект должен передаваться в качестве параметра.
-    public abstract Task addTask(Task task);
+    public void addTask(Task task);
 
     //получать задачи по типу
     public abstract ArrayList<Task> getAllTasks();
@@ -37,27 +37,4 @@ public interface TaskManager {
     //он должен возвращать последние 10 просмотренных задач
     public abstract ArrayList<Task> getHistory();
 
-    private static void printAllTasks(TaskManager manager) {
-        System.out.println("Задачи:");
-        for (Task task : manager.getAllTasks()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (Epic epic : manager.getAllEpics()) {
-            System.out.println(epic);
-
-            for (Task task : manager.getSubtaskByEpic(epic.getIdTask())) {
-                System.out.println("--> " + task);
-            }
-        }
-        System.out.println("Подзадачи:");
-        for (Task subtask : manager.getAllSubtasks()) {
-            System.out.println(subtask);
-        }
-
-        System.out.println("История:");
-        for (Task task : manager.getHistory()) {
-            System.out.println(task);
-        }
-    }
 }

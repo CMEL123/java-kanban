@@ -3,74 +3,89 @@ package service;
 import model.Epic;
 import model.Status;
 import model.Task;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 class InMemoryHistoryManagerTest {
-    static InMemoryTaskManager manager = new InMemoryTaskManager();
-    static InMemoryHistoryManager historyManager = manager.getHistoryManager();
-    static Task t1 = new Task("Задача1", "Задача1d", 1234);
-    static Task t2 = new Task("Задача2", "Задача2d", 12345, Status.IN_PROGRESS);
-    static Epic e1 = new Epic("Эпик1", "Задача1d", 1424);
-
-    @BeforeAll
-    static void beforeAll() {
-        manager.addTask(t1);
-        manager.addTask(t2);
-        manager.addTask(e1);
-    }
 
     //убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
     @Test
-    void testGetAndAddHistory() {
-        Task lastTask;
+    void add() {
+        InMemoryTaskManager manager = new InMemoryTaskManager();
+        Task t1 = new Task("Задача1", "Задача1d", 1234);
+        manager.addTask(t1);
+
+        manager.getTaskById(t1.getIdTask());
+        assertEquals(manager.getHistory().size(), 1);
+        assertEquals(t1, manager.getHistory().getLast());
+    }
+
+    @Test
+    void get() {
+        InMemoryTaskManager manager = new InMemoryTaskManager();
+        Task t1 = new Task("Задача1", "Задача1d", 1234);
+        Epic e1 = new Epic("Эпик1", "Задача1d", 1424);
+
+        manager.addTask(t1);
+        manager.addTask(e1);
+
+        manager.getTaskById(t1.getIdTask());
+        assertEquals(manager.getHistory().size(), 1);
+        assertEquals(t1, manager.getHistory().getLast());
+
+        manager.getTaskById(e1.getIdTask());
+        assertEquals(manager.getHistory().size(), 2);
+        assertEquals(e1, manager.getHistory().getLast());
+
+        assertEquals(t1, manager.getHistory().getFirst());
+    }
+
+    //Тест на переполнение (В истории должно хранится 10 последних задач)
+    @Test
+    void savelastTenTask() {
+        InMemoryTaskManager manager = new InMemoryTaskManager();
+        Task t1 = new Task("Задача1", "Задача1d", 1234);
+        Task t2 = new Task("Задача2", "Задача2d", 12345, Status.IN_PROGRESS);
+        Epic e1 = new Epic("Эпик1", "Задача1d", 1424);
+
+        manager.addTask(t1);
+        manager.addTask(t2);
+        manager.addTask(e1);
+
         //Тест на добавление в историю при просмотре задачи
         manager.getTaskById(t1.getIdTask());
-        lastTask = historyManager.getHistory().getLast();
-        assertEquals(historyManager.getHistory().size(), 1);
-        assertEquals(t1, lastTask);
-
+        assertEquals(manager.getHistory().size(), 1);
         manager.getTaskById(t2.getIdTask());
-        lastTask = historyManager.getHistory().getLast();
-        assertEquals(historyManager.getHistory().size(), 2);
-        assertEquals(t2, lastTask);
-
+        assertEquals(manager.getHistory().size(), 2);
         manager.getTaskById(t2.getIdTask());
-        lastTask = historyManager.getHistory().getLast();
-        assertEquals(historyManager.getHistory().size(), 3);
-        assertEquals(t2, lastTask);
-
+        assertEquals(manager.getHistory().size(), 3);
         manager.getTaskById(t1.getIdTask()); //4
-        assertEquals(historyManager.getHistory().size(), 4);
+        assertEquals(manager.getHistory().size(), 4);
         manager.getTaskById(t1.getIdTask()); //5
-        assertEquals(historyManager.getHistory().size(), 5);
+        assertEquals(manager.getHistory().size(), 5);
         manager.getTaskById(t1.getIdTask()); //6
-        assertEquals(historyManager.getHistory().size(), 6);
+        assertEquals(manager.getHistory().size(), 6);
         manager.getTaskById(e1.getIdTask()); //7
-        assertEquals(historyManager.getHistory().size(), 7);
+        assertEquals(manager.getHistory().size(), 7);
         manager.getTaskById(t1.getIdTask()); //8
-        assertEquals(historyManager.getHistory().size(), 8);
+        assertEquals(manager.getHistory().size(), 8);
         manager.getTaskById(t1.getIdTask()); //9
-        assertEquals(historyManager.getHistory().size(), 9);
+        assertEquals(manager.getHistory().size(), 9);
         manager.getTaskById(e1.getIdTask()); //10
-        lastTask = historyManager.getHistory().getLast();
-        assertEquals(historyManager.getHistory().size(), 10);
-        assertEquals(e1, lastTask);
+        assertEquals(manager.getHistory().size(), 10);
+        assertEquals(e1, manager.getHistory().getLast());
 
-        //Тест на переполнение (В истории должно хранится 10 последних задач)
+        //11
         manager.getTaskById(t2.getIdTask());
-        lastTask = historyManager.getHistory().getLast();
-        assertEquals(historyManager.getHistory().size(), 10);
-        assertEquals(t2, lastTask);
-        assertNotEquals(t1, historyManager.getHistory().getFirst());
-        assertEquals(t2, historyManager.getHistory().getFirst());
-;
+        assertEquals(manager.getHistory().size(), 10);
+        assertEquals(t2, manager.getHistory().getLast());
+        assertNotEquals(t1, manager.getHistory().getFirst());
+        assertEquals(t2, manager.getHistory().getFirst());
+
     }
+
+
 
 }
