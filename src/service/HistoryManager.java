@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 public interface HistoryManager {
     public void add(Task task);
-    public abstract ArrayList<Task> getHistory();
+    public ArrayList<Task> getHistory();
 }
