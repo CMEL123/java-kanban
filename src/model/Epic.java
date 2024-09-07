@@ -11,13 +11,13 @@ public class Epic extends Task {
         this.setTypeTask(TypeTask.EPIC);
     }
 
-    public void addSubTask( Subtask subtask ) {
+    public void addSubTask(Subtask subtask) {
         if (!subtasks.contains(subtask.getIdTask())) {
             subtasks.add(subtask.getIdTask());
         }
     }
 
-    public void delSubTask(Subtask subtask ) {
+    public void delSubTask(Subtask subtask) {
         if (subtasks.contains(subtask.getIdTask())) {
             subtasks.remove((Integer) subtask.getIdTask());
         }
