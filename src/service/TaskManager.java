@@ -11,7 +11,9 @@ public interface TaskManager {
 
     //получать задачи по типу
     public ArrayList<Task> getAllTasks();
+
     public ArrayList<Epic> getAllEpics();
+
     public ArrayList<Subtask> getAllSubtasks();
 
     //Удаление всех задач
