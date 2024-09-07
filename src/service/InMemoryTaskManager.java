@@ -145,6 +145,7 @@ public class InMemoryTaskManager implements TaskManager {
             allSubtask.remove(id);
             updateEpicStatus( epic.getIdTask() );
         }
+        historyManager.remove(id);
     }
 
     //Получение списка всех подзадач определённого эпика.

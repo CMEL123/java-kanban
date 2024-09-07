@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Integer>subtasks; //список подзадач
+    private ArrayList<Integer> subtasks; //список подзадач
 
     public Epic(String name, String description, int idTask) {
         super(name, description, idTask);
@@ -11,13 +11,13 @@ public class Epic extends Task {
         this.setTypeTask(TypeTask.EPIC);
     }
 
-    public void addSubTask( Subtask subtask ){
+    public void addSubTask( Subtask subtask ) {
         if (!subtasks.contains(subtask.getIdTask())) {
             subtasks.add(subtask.getIdTask());
         }
     }
 
-    public void delSubTask(Subtask subtask ){
+    public void delSubTask(Subtask subtask ) {
         if (subtasks.contains(subtask.getIdTask())) {
             subtasks.remove((Integer) subtask.getIdTask());
         }
@@ -32,7 +32,7 @@ public class Epic extends Task {
         String retStr =  super.toString();
         if (this.getSubtasks().isEmpty()) return retStr;
         retStr += " Subtasks:" + "\n";
-        for (Integer subtask : this.getSubtasks()){
+        for (Integer subtask : this.getSubtasks()) {
             retStr += subtask + "\n";
         }
         return retStr;
