@@ -1,6 +1,6 @@
 package model;
 
-public class Subtask extends Task{
+public class Subtask extends Task {
     private Integer epicId; //эпик, к которому относится подзадача
 
     public Subtask(String name, String description, int idTask, Epic epic) {

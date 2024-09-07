@@ -86,6 +86,9 @@ public class Main {
         System.out.println(manager.getTaskById(3));
         System.out.println(manager.getTaskById(4));
         System.out.println(manager.getTaskById(5));
+        System.out.println(manager.getTaskById(1));
+        System.out.println(manager.getTaskById(1));
+        System.out.println(manager.getTaskById(5));
         System.out.println();
         System.out.println(manager.toString());
         printDivider();
@@ -115,18 +118,7 @@ public class Main {
     }
 
     public static void printDivider() {
-        String putsStr = "";
-        for(int i=0; i< 30; i++){
-            putsStr += "=";
-        }
-        System.out.println(putsStr);
+        System.out.println("=".repeat(30));
     }
 
-    public static int find(int[] array, int elem) {
-        
-        for(int i = 0; i < array.length; i++) {
-            if (array[i] == elem) return i;
-        }
-        return -1;
-    }
 }
