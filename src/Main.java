@@ -118,11 +118,7 @@ public class Main {
     }
 
     public static void printDivider() {
-        String putsStr = "";
-        for(int i=0; i< 30; i++){
-            putsStr += "=";
-        }
-        System.out.println(putsStr);
+        System.out.println("=".repeat(30));
     }
 
 }
