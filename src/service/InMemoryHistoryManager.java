@@ -7,18 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class InMemoryHistoryManager  implements HistoryManager {
-    private static class Node {
-        Node prev;
-        Task item;
-        Node next;
-
-        Node(Node prev, Task el, Node next) {
-            this.prev = prev;
-            this.item = el;
-            this.next = next;
-        }
-    }
-
     HashMap<Integer, Node> history = new LinkedHashMap<>();
     Node head;
     Node tail;
@@ -57,7 +45,6 @@ public class InMemoryHistoryManager  implements HistoryManager {
     public void remove(int id) {
         Node node = history.get(id);
         removeNode(node);
-        history.remove(id);
     }
 
     private void linkLast(Task task) {
@@ -87,4 +74,15 @@ public class InMemoryHistoryManager  implements HistoryManager {
         history.remove(node.item.getIdTask());
     }
 
+    private static class Node {
+        Node prev;
+        Task item;
+        Node next;
+
+        Node(Node prev, Task el, Node next) {
+            this.prev = prev;
+            this.item = el;
+            this.next = next;
+        }
+    }
 }
