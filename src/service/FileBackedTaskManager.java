@@ -25,15 +25,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("id,type,name,status,description,epic\n");
             for (Task task : super.getAllTasks()) {
-                writer.write(task.ToStringTask());
+                writer.write(task.toStringTask());
                 writer.write("\n");
             }
             for (Epic epic : super.getAllEpics()) {
-                writer.write(epic.ToStringTask());
+                writer.write(epic.toStringTask());
                 writer.write("\n");
             }
             for (Subtask subtask : super.getAllSubtasks()) {
-                writer.write(subtask.ToStringTask());
+                writer.write(subtask.toStringTask());
                 writer.write("\n");
             }
         } catch (IOException e) {
