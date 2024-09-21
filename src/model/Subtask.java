@@ -21,7 +21,9 @@ public class Subtask extends Task {
 
 
     @Override
-    public String toStringTask(){ return  super.toStringTask() + this.getEpicId() + ","; }
+    public String toStringTask() {
+        return  super.toStringTask() + this.getEpicId() + ",";
+    }
 
     public Integer getEpicId() {
         return epicId;

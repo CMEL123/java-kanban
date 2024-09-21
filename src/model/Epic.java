@@ -45,7 +45,9 @@ public class Epic extends Task {
     }
 
     @Override
-    public String toStringTask() { return super.toStringTask(); }
+    public String toStringTask() {
+        return super.toStringTask();
+    }
 
     public void setSubtasks(ArrayList<Integer> subtasks) {
         this.subtasks = subtasks;
