@@ -55,7 +55,7 @@ class InMemoryTaskManagerTest {
     @Test
     //проверьте, что InMemoryTaskManager действительно
     //добавляет задачи разного типа и может найти их по id;
-    void addTask(){
+    void addTask() {
         assertEquals(t1, manager.getTaskById(t1.getIdTask()));
         assertEquals(t2, manager.getTaskById(t2.getIdTask()));
         assertEquals(e1, manager.getTaskById(e1.getIdTask()));
@@ -67,25 +67,25 @@ class InMemoryTaskManagerTest {
 
     //Получение списка всех задач
     @Test
-    void getAllTasks(){
+    void getAllTasks() {
         assertEquals(manager.getAllTasks().size(), 2);
     }
 
     //Получение списка всех эпиков
     @Test
-    void getAllEpics(){
+    void getAllEpics() {
         assertEquals(manager.getAllEpics().size(), 2);
     }
 
     //Получение списка всех эпиков
     @Test
-    void getAllSubtasks(){
+    void getAllSubtasks() {
         assertEquals(manager.getAllSubtasks().size(), 3);
     }
 
     //получать задачи по идентификатору
     @Test
-    void getTaskById(){
+    void getTaskById() {
         assertEquals(t1, manager.getTaskById(t1.getIdTask()));
         assertEquals(t1, manager.getHistory().getLast());
         assertEquals(e1, manager.getTaskById(e1.getIdTask()));
@@ -116,7 +116,7 @@ class InMemoryTaskManagerTest {
 
     //Удаление по идентификатору.
     @Test
-    void deleteTaskById(){
+    void deleteTaskById() {
         //До удаления
         assertTrue(e2.getSubtasks().contains(s3.getIdTask()));
         assertEquals(e2.getStatus(), Status.DONE);
@@ -141,19 +141,19 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void deleteAllSubtasks(){
+    void deleteAllSubtasks() {
         manager.deleteAllSubtasks();
         assertTrue(manager.getAllSubtasks().isEmpty());
     }
 
     @Test
-    void deleteAllEpics(){
+    void deleteAllEpics() {
         manager.deleteAllEpics();
         assertTrue(manager.getAllEpics().isEmpty());
     }
 
     @Test
-    void deleteAllTasks(){
+    void deleteAllTasks() {
         manager.deleteAllTasks();
         assertTrue(manager.getAllTasks().isEmpty());
     }

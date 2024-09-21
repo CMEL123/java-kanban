@@ -36,7 +36,7 @@ public class Task {
         if (this.getClass() != obj.getClass()) return false;
         Task otherTask = (Task) obj;
         return Objects.equals(name, otherTask.name) &&
-                Objects.equals(idTask, otherTask.idTask) ;
+                Objects.equals(idTask, otherTask.idTask);
     }
 
     @Override
