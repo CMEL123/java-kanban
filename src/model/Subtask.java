@@ -19,6 +19,10 @@ public class Subtask extends Task {
         this.setTypeTask(TypeTask.SUBTASK);
     }
 
+
+    @Override
+    public String ToStringTask(){ return  super.ToStringTask() + this.getEpicId() + ","; }
+
     public Integer getEpicId() {
         return epicId;
     }

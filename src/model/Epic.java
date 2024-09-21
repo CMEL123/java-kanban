@@ -11,6 +11,12 @@ public class Epic extends Task {
         this.setTypeTask(TypeTask.EPIC);
     }
 
+    public Epic(String name, String description, int idTask, Status status) {
+        super(name, description, idTask, status);
+        this.subtasks = new ArrayList<Integer>();
+        this.setTypeTask(TypeTask.EPIC);
+    }
+
     public void addSubTask(Subtask subtask) {
         if (!subtasks.contains(subtask.getIdTask())) {
             subtasks.add(subtask.getIdTask());
@@ -37,6 +43,9 @@ public class Epic extends Task {
         }
         return retStr;
     }
+
+    @Override
+    public String ToStringTask() { return super.ToStringTask(); }
 
     public void setSubtasks(ArrayList<Integer> subtasks) {
         this.subtasks = subtasks;

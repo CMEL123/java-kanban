@@ -8,10 +8,10 @@ import java.util.ArrayList;
 public class InMemoryTaskManager implements TaskManager {
     private int identifier = 0;
 
-    private final HashMap<Integer, Task> allTask;
-    private final HashMap<Integer, Epic> allEpic;
-    private final HashMap<Integer, Subtask> allSubtask;
-    private final HistoryManager historyManager;
+    protected final HashMap<Integer, Task> allTask;
+    protected final HashMap<Integer, Epic> allEpic;
+    protected final HashMap<Integer, Subtask> allSubtask;
+    protected final HistoryManager historyManager;
 
     public InMemoryTaskManager() {
         allTask    =  new HashMap<Integer, Task>();

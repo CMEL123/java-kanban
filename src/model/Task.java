@@ -53,6 +53,14 @@ public class Task {
                "status: " + status;
     }
 
+    public String ToStringTask() {
+        return this.getIdTask() + "," +
+                this.getTypeTask() + "," +
+                this.getName() + "," +
+                this.getStatus() + "," +
+                this.getDescription() + ",";
+    }
+
     public String getName() {
         return name;
     }
