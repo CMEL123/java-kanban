@@ -21,18 +21,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return file;
     }
 
-    public void save(){
+    public void save() {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("id,type,name,status,description,epic\n");
-            for(Task task : super.getAllTasks()){
+            for (Task task : super.getAllTasks()) {
                 writer.write(task.ToStringTask());
                 writer.write("\n");
             }
-            for(Epic epic : super.getAllEpics()){
+            for (Epic epic : super.getAllEpics()) {
                 writer.write(epic.ToStringTask());
                 writer.write("\n");
             }
-            for(Subtask subtask : super.getAllSubtasks()){
+            for (Subtask subtask : super.getAllSubtasks()) {
                 writer.write(subtask.ToStringTask());
                 writer.write("\n");
             }
@@ -41,7 +41,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public Task fromString(String value){
+    public Task fromString(String value) {
         //id,type,name,status,description,epic
         // 0,   1,   2,     3,          4,   5
         String[] split = value.split(",");
