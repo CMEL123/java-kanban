@@ -19,11 +19,13 @@ public class Subtask extends Task {
         this.setTypeTask(TypeTask.SUBTASK);
     }
 
-
-    @Override
-    public String toStringTask() {
-        return  super.toStringTask() + this.getEpicId() + ",";
+    public Subtask(String name, String description, int idTask, int epic_id, Status status) {
+        super(name, description, idTask);
+        this.setStatus(status);
+        this.setEpicId(epic_id);
+        this.setTypeTask(TypeTask.SUBTASK);
     }
+
 
     public Integer getEpicId() {
         return epicId;

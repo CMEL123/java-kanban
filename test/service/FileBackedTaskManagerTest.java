@@ -11,6 +11,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
+
 class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
     static File tmpFile;
     @Override
@@ -26,7 +27,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
         //Проверяем это
         int count = 0;
         try (final BufferedReader reader = new BufferedReader(new FileReader(manager.getFile(), UTF_8))) {
-            while ((reader.readLine()) != null) {
+            while (reader.readLine() != null) {
                 count++;
             }
         }
@@ -36,8 +37,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
     //Проверка загрузки нескольких задач.
     @Test
     void loadTasks() throws IOException {
-        FileBackedTaskManager manager2 = new FileBackedTaskManager(tmpFile);
-        manager2.loadFromFile();
+        FileBackedTaskManager manager2 = FileBackedTaskManager.loadFromFile(tmpFile);
         assertEquals(manager.getAllTasks().size(), manager2.getAllTasks().size());
         assertEquals(manager.getAllSubtasks().size(), manager2.getAllSubtasks().size());
         assertEquals(manager.getAllEpics().size(), manager2.getAllEpics().size());
@@ -55,9 +55,10 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>{
         assertEquals(manager2.getAllSubtasks().size(), 0);
         assertEquals(manager2.getAllEpics().size(), 0);
         manager2.save();
-        manager2.loadFromFile();
-        assertEquals(manager2.getAllTasks().size(), 0);
-        assertEquals(manager2.getAllSubtasks().size(), 0);
-        assertEquals(manager2.getAllEpics().size(), 0);
+
+        FileBackedTaskManager manager3 = FileBackedTaskManager.loadFromFile(tmpFile2);
+        assertEquals(manager3.getAllTasks().size(), 0);
+        assertEquals(manager3.getAllSubtasks().size(), 0);
+        assertEquals(manager3.getAllEpics().size(), 0);
     }
 }
