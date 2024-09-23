@@ -54,7 +54,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (final BufferedReader reader = new BufferedReader(new FileReader(file, UTF_8))) {
             reader.readLine(); //Пропускаем первую строку
             String line;
-            int max_id = 0;
+            int maxId = 0;
             while ((line = reader.readLine()) != null) {
                 Task task = TaskConverter.fromString(line);
                 if (task == null) {
@@ -72,9 +72,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     epic.addSubTask(newTask);
                     manager.allSubtask.put(newTask.getIdTask(), newTask);
                 }
-                if (max_id < task.getIdTask()) max_id = task.getIdTask();
+                if (maxId < task.getIdTask()) maxId = task.getIdTask();
             }
-            manager.identifier = max_id;
+            manager.identifier = maxId;
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка загрузки", e);
         } catch (ValidationException e) {
