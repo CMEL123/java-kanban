@@ -11,7 +11,7 @@ public class TaskConverter {
                 task.getStatus() + "," +
                 task.getDescription() + ",";
 
-        if ( task.getTypeTask() == TypeTask.SUBTASK ) ret += ((Subtask)task).getEpicId() + ",";
+        if (task.getTypeTask() == TypeTask.SUBTASK) ret += ((Subtask)task).getEpicId() + ",";
 
         return ret;
     }
