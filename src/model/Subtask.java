@@ -19,10 +19,10 @@ public class Subtask extends Task {
         this.setTypeTask(TypeTask.SUBTASK);
     }
 
-    public Subtask(String name, String description, int idTask, int epic_id, Status status) {
+    public Subtask(String name, String description, int idTask, int epicId, Status status) {
         super(name, description, idTask);
         this.setStatus(status);
-        this.setEpicId(epic_id);
+        this.setEpicId(epicId);
         this.setTypeTask(TypeTask.SUBTASK);
     }
 
