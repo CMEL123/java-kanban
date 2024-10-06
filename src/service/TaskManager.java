@@ -1,6 +1,5 @@
 package service;
 
-import exception.ValidationException;
 import model.*;
 
 import java.util.ArrayList;
