@@ -1,6 +1,5 @@
 package service;
 
-import exception.ManagerSaveException;
 import exception.ValidationException;
 import model.*;
 
@@ -133,7 +132,7 @@ public class InMemoryTaskManager implements TaskManager {
         Task oldTask = getTaskById(id);
         sortTasksByStartTime.remove(oldTask);
         try {
-            if (sortTasksByStartTime.stream().anyMatch(t -> cheakTaskByStartTime(t, task) )) {
+            if (sortTasksByStartTime.stream().anyMatch(t -> cheakTaskByStartTime(t, task))) {
                 throw new ValidationException("Пересечение времени");
             }
         } catch (ValidationException e) {
@@ -247,7 +246,7 @@ public class InMemoryTaskManager implements TaskManager {
         editEpic.setStatus(Status.DONE);
     }
 
-    private void updateEpicTime(int epicId){
+    private void updateEpicTime(int epicId) {
         Epic editEpic = allEpic.get(epicId);
 
         LocalDateTime startTime = null; //дата старта самой ранней подзадачи
@@ -273,11 +272,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getPrioritizedTasks(){
+    public ArrayList<Task> getPrioritizedTasks() {
         return new ArrayList<>(sortTasksByStartTime);
     }
 
-    private boolean cheakTaskByStartTime(Task t1, Task t2){
+    private boolean cheakTaskByStartTime(Task t1, Task t2) {
         return t1.getStartTime().equals(t2.getStartTime()) ||
                t1.getEndTime().equals(t2.getEndTime()) ||
                t1.getStartTime().isBefore(t2.getStartTime()) && t1.getEndTime().isAfter(t2.getStartTime()) ||
