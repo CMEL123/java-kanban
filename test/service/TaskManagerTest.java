@@ -9,10 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class TaskManagerTest<T extends TaskManager> {
     protected T manager;
@@ -29,13 +30,20 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @BeforeEach
     void beforeEach() throws IOException {
         manager = createTaskManager();
-        t1 = new Task("Задача1", "Задача1d", 1234);
-        t2 = new Task("Задача2", "Задача2d", 12345, Status.IN_PROGRESS);
-        e1 = new Epic("Эпик1", "Задача1d", 1424);
-        e2 = new Epic("Эпик2", "Задача2d", 4343);
-        s1 = new Subtask("Подзадача1", "Задача1d", 1424, e1, Status.IN_PROGRESS);
-        s2 = new Subtask("Подзадача2", "Задача2d", 4343, e1, Status.NEW);
-        s3 = new Subtask("Подзадача3", "Задача1d", 1424, e2, Status.DONE);
+        LocalDateTime nowTime = LocalDateTime.now();
+        t1 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(100), nowTime);
+        nowTime = nowTime.plusMinutes(150);
+        t2 = new Task("Задача2", "Задача2d", 12345, Duration.ofMinutes(100), nowTime, Status.IN_PROGRESS);
+        nowTime = nowTime.plusMinutes(150);
+        e1 = new Epic("Эпик1", "Задача1d", 1424, Duration.ofMinutes(100), nowTime);
+        nowTime = nowTime.plusMinutes(150);
+        e2 = new Epic("Эпик2", "Задача2d", 4343, Duration.ofMinutes(100), nowTime);
+        nowTime = nowTime.plusMinutes(150);
+        s1 = new Subtask("Подзадача1", "Задача1d", 1424, e1, Duration.ofMinutes(100), nowTime, Status.IN_PROGRESS);
+        nowTime = nowTime.plusMinutes(150);
+        s2 = new Subtask("Подзадача2", "Задача2d", 4343, e1, Duration.ofMinutes(100), nowTime, Status.NEW);
+        nowTime = nowTime.plusMinutes(150);
+        s3 = new Subtask("Подзадача3", "Задача1d", 1424, e2, Duration.ofMinutes(100), nowTime, Status.DONE);
 
         manager.addTask(t1);
         manager.addTask(t2);
@@ -51,6 +59,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         s3.setEpicId(e2.getIdTask());
         manager.addTask(s3);
     }
+
     @AfterEach
     void afterEach() {
         manager.deleteAllTasks();
@@ -61,7 +70,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
         //проверьте, что InMemoryTaskManager действительно
         //добавляет задачи разного типа и может найти их по id;
-    void addTask() {
+    void addTask()  {
         assertEquals(t1, manager.getTaskById(t1.getIdTask()));
         assertEquals(t2, manager.getTaskById(t2.getIdTask()));
         assertEquals(e1, manager.getTaskById(e1.getIdTask()));
@@ -69,6 +78,31 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(s3, manager.getTaskById(s3.getIdTask()));
         assertEquals(e2, manager.getTaskById(e2.getIdTask()));
         assertEquals(s2, manager.getTaskById(s2.getIdTask()));
+
+        //Тест, что нельзя добавить с пересечением по времени
+        Task t3 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(100), t1.getStartTime()); //с одинаковым StartTime
+        manager.addTask(t3);
+        assertFalse(manager.getAllTasks().contains(t3));
+        Task t4 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(100), t1.getStartTime().plusMinutes(1)); //с одинаковым StartTime
+        manager.addTask(t4);
+        assertFalse(manager.getAllTasks().contains(t4));
+        Task t5 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(100), t1.getStartTime().plusMinutes(-1)); //с одинаковым StartTime
+        manager.addTask(t5);
+        assertFalse(manager.getAllTasks().contains(t5));
+
+        //Проверка изменения атрибутов endTime StartTime Duration у класса Epic
+        long oldDurationMinutes = e1.getDuration().toMinutes();
+        Subtask s4 = new Subtask("Подзадача1", "Задача1d", 14247, e1.getIdTask(), Duration.ofMinutes(100), e1.getStartTime().plusMinutes(-2000), Status.IN_PROGRESS);
+
+        manager.addTask(s4);
+        assertEquals(e1.getStartTime(), s4.getStartTime());
+        assertNotEquals(e1.getDuration().toMinutes(), oldDurationMinutes);
+        assertEquals(e1.getDuration().toMinutes(), oldDurationMinutes + 100);
+
+        Subtask s5 = new Subtask("Подзадача1", "Задача1d", 14247, e1.getIdTask(), Duration.ofMinutes(100), e1.getStartTime().plusMinutes(3000), Status.IN_PROGRESS);
+
+        manager.addTask(s5);
+        assertEquals(e1.getEndTime(), s5.getEndTime());
     }
 
     //Получение списка всех задач
@@ -106,17 +140,19 @@ abstract class TaskManagerTest<T extends TaskManager> {
     //Обновление.
     @Test
     void updateTask() {
-        Task t3 = new Task("Задача3", "Задача1d", t2.getIdTask());
+        Task t3 = new Task("Задача3", "Задача1d", t2.getIdTask(), t2.getDuration(), t2.getStartTime());
         manager.updateTask(t3);
         assertEquals(t3, manager.getTaskById(t3.getIdTask()));
         assertNotEquals(t2, manager.getTaskById(t2.getIdTask()));
         assertNotEquals(t2, t3);
+
+
     }
 
     //проверьте, что задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера;
     @Test
     void cheakId() {
-        Task t4 = new Task("Задача4", "Задача4", t1.getIdTask());
+        Task t4 = new Task("Задача4", "Задача4", t1.getIdTask(), t1.getDuration(), t1.getStartTime());
         assertNotEquals(t4, manager.getTaskById(t1.getIdTask()));
     }
 
@@ -168,4 +204,5 @@ abstract class TaskManagerTest<T extends TaskManager> {
     //Проверьте, что объект Subtask нельзя сделать своим же эпиком;
     // Этих проверок не будет
     // (При обсуждении с наставниками мы сошлись на том, что такой тест написать невозможно, так как методы по созданию задач/подзадач/эпиков принимают объекты определенного типа. )
+
 }
