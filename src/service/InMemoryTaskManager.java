@@ -110,18 +110,21 @@ public class InMemoryTaskManager implements TaskManager {
     //получать задачи по идентификатору
     @Override
     public Task getTaskById(int id) {
-        Task retTask;
+        Task retTask = getTaskByIdWithoutHistory(id);
+        if (retTask != null) historyManager.add(retTask);
+        return retTask;
+    }
+
+    private Task getTaskByIdWithoutHistory(int id) {
         if (allTask.containsKey(id)) {
-            retTask = allTask.get(id);
+            return allTask.get(id);
         } else if (allEpic.containsKey(id)) {
-            retTask = ((Task) allEpic.get(id));
+            return allEpic.get(id);
         } else if (allSubtask.containsKey(id)) {
-            retTask = ((Task) allSubtask.get(id));
+            return allSubtask.get(id);
         } else {
             return null;
         }
-        historyManager.add(retTask);
-        return retTask;
     }
 
 
@@ -129,8 +132,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         int id = task.getIdTask();
-        Task oldTask = getTaskById(id);
-        sortTasksByStartTime.remove(oldTask);
+        Task oldTask = getTaskByIdWithoutHistory(id);
+
         try {
             if (sortTasksByStartTime.stream().anyMatch(t -> cheakTaskByStartTime(t, task))) {
                 throw new ValidationException("Пересечение времени");
@@ -277,9 +280,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean cheakTaskByStartTime(Task t1, Task t2) {
-        return t1.getStartTime().equals(t2.getStartTime()) ||
-               t1.getEndTime().equals(t2.getEndTime()) ||
-               t1.getStartTime().isBefore(t2.getStartTime()) && t1.getEndTime().isAfter(t2.getStartTime()) ||
-               t1.getStartTime().isBefore(t2.getEndTime()) && t1.getEndTime().isAfter(t2.getEndTime());
+        return t1.getIdTask() != t2.getIdTask() &&
+               //a.start <= b.end AND a.end >= b.start
+               (t1.getStartTime().isBefore(t2.getEndTime()) || t1.getStartTime().isEqual(t2.getEndTime())) &&
+               (t1.getEndTime().isAfter(t2.getStartTime()) || t1.getEndTime().isEqual(t2.getStartTime()));
     }
 }

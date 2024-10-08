@@ -89,6 +89,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task t5 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(100), t1.getStartTime().plusMinutes(-1)); //с одинаковым StartTime
         manager.addTask(t5);
         assertFalse(manager.getAllTasks().contains(t5));
+        Task t6 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(10000), t1.getStartTime().plusMinutes(-1)); //с одинаковым StartTime
+        manager.addTask(t6);
+        assertFalse(manager.getAllTasks().contains(t5));
 
         //Проверка изменения атрибутов endTime StartTime Duration у класса Epic
         long oldDurationMinutes = e1.getDuration().toMinutes();
