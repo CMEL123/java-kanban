@@ -1,15 +1,19 @@
+import exception.ValidationException;
 import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
 import service.InMemoryTaskManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ValidationException {
         System.out.println("Test1");
-        Task t1 = new Task("Задача1", "Задача1d", 1234);
-        Task t2 = new Task("Задача2", "Задача2d", 12345, Status.IN_PROGRESS);
+        Task t1 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(100), LocalDateTime.now());
+        Task t2 = new Task("Задача2", "Задача2d", 12345, Duration.ofMinutes(100), LocalDateTime.now(), Status.IN_PROGRESS);
 
         System.out.println(t1.getClass());
 
@@ -18,17 +22,17 @@ public class Main {
 
         printDivider();
         System.out.println("Test2");
-        Epic e1 = new Epic("Эпик1", "Задача1d", 1424);
-        Epic e2 = new Epic("Эпик2", "Задача2d", 4343);
+        Epic e1 = new Epic("Эпик1", "Задача1d", 1424, Duration.ofMinutes(100), LocalDateTime.now());
+        Epic e2 = new Epic("Эпик2", "Задача2d", 4343, Duration.ofMinutes(100), LocalDateTime.now());
 
         System.out.println(e1.toString());
         System.out.println(e2.toString());
 
         printDivider();
         System.out.println("Test3");
-        Subtask s1 = new Subtask("Подзадача1", "Задача1d", 1424, e1, Status.IN_PROGRESS);
-        Subtask s2 = new Subtask("Подзадача2", "Задача2d", 4343, e1, Status.NEW);
-        Subtask s3 = new Subtask("Подзадача3", "Задача1d", 1424, e2, Status.DONE);
+        Subtask s1 = new Subtask("Подзадача1", "Задача1d", 1424, e1, Duration.ofMinutes(100), LocalDateTime.now(), Status.IN_PROGRESS);
+        Subtask s2 = new Subtask("Подзадача2", "Задача2d", 4343, e1, Duration.ofMinutes(100), LocalDateTime.now(), Status.NEW);
+        Subtask s3 = new Subtask("Подзадача3", "Задача1d", 1424, e2, Duration.ofMinutes(100), LocalDateTime.now(), Status.DONE);
 
         System.out.println(s1.toString());
         System.out.println(s2.toString());
@@ -97,7 +101,7 @@ public class Main {
         //на QA_04 объяснили, что берем объект смотрим его id,
         // если такой id уже есть, то заменяем
         System.out.println("Test9: Обновление.");
-        Task t3 = new Task("Задача3", "Задача1d", 2);
+        Task t3 = new Task("Задача3", "Задача1d", 2, Duration.ofMinutes(100), LocalDateTime.now());
         manager.updateTask(t3);
         System.out.println(manager.getAllTasks());
         printDivider();

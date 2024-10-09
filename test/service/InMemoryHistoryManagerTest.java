@@ -5,6 +5,9 @@ import model.Status;
 import model.Task;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -14,7 +17,7 @@ class InMemoryHistoryManagerTest {
     @Test
     void add() {
         InMemoryTaskManager manager = new InMemoryTaskManager();
-        Task t1 = new Task("Задача1", "Задача1d", 1234);
+        Task t1 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(100), LocalDateTime.now());
         manager.addTask(t1);
 
         manager.getTaskById(t1.getIdTask());
@@ -25,8 +28,8 @@ class InMemoryHistoryManagerTest {
     @Test
     void get() {
         InMemoryTaskManager manager = new InMemoryTaskManager();
-        Task t1 = new Task("Задача1", "Задача1d", 1234);
-        Epic e1 = new Epic("Эпик1", "Задача1d", 1424);
+        Task t1 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(100), LocalDateTime.now());
+        Epic e1 = new Epic("Эпик1", "Задача1d", 1424, Duration.ofMinutes(100), t1.getEndTime().plusMinutes(1) );
 
         manager.addTask(t1);
         manager.addTask(e1);
@@ -46,11 +49,10 @@ class InMemoryHistoryManagerTest {
     @Test
     void savelastTenTask() {
         InMemoryTaskManager manager = new InMemoryTaskManager();
-
         Task t = null;
         //Тест на добавление в историю при просмотре задачи
         for (int i = 1; i < 12; i++) {
-            t = new Task("Задача" + i, "Задача" + i + "d", i, Status.IN_PROGRESS);
+            t = new Task("Задача" + i, "Задача" + i + "d", i, Duration.ofMinutes(50), LocalDateTime.now().plusMinutes(100*i), Status.IN_PROGRESS);
             manager.addTask(t);
             manager.getTaskById(t.getIdTask());
             assertEquals(manager.getHistory().size(), i);

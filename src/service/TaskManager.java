@@ -39,4 +39,6 @@ public interface TaskManager {
     //он должен возвращать последние 10 просмотренных задач
     public ArrayList<Task> getHistory();
 
+    //Выводим список задач в порядке приоритета
+    public ArrayList<Task> getPrioritizedTasks();
 }

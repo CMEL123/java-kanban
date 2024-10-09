@@ -1,26 +1,29 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private Integer epicId; //эпик, к которому относится подзадача
 
-    public Subtask(String name, String description, int idTask, Epic epic) {
-        super(name, description, idTask);
+    public Subtask(String name, String description, int idTask, Epic epic, Duration duration, LocalDateTime startTime) {
+        super(name, description, idTask, duration, startTime);
         this.setStatus(Status.NEW);
         this.setEpicId(epic.getIdTask());
         epic.addSubTask(this);
         this.setTypeTask(TypeTask.SUBTASK);
     }
 
-    public Subtask(String name, String description, int idTask, Epic epic, Status status) {
-        super(name, description, idTask);
+    public Subtask(String name, String description, int idTask, Epic epic, Duration duration, LocalDateTime startTime, Status status) {
+        super(name, description, idTask, duration, startTime);
         this.setStatus(status);
         this.setEpicId(epic.getIdTask());
         epic.addSubTask(this);
         this.setTypeTask(TypeTask.SUBTASK);
     }
 
-    public Subtask(String name, String description, int idTask, int epicId, Status status) {
-        super(name, description, idTask);
+    public Subtask(String name, String description, int idTask, int epicId, Duration duration, LocalDateTime startTime, Status status) {
+        super(name, description, idTask, duration, startTime);
         this.setStatus(status);
         this.setEpicId(epicId);
         this.setTypeTask(TypeTask.SUBTASK);

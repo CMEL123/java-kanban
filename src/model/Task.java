@@ -1,5 +1,7 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -8,25 +10,35 @@ public class Task {
     private int    idTask;      // Уникальный номер задачи
     private Status status;      // Статус задачи
     private TypeTask typeTask;        // имя класса
+    private Duration duration; //продолжительность задачи в минутах
+    private LocalDateTime startTime; //дата и время начала выполнения задачи.
 
-    public Task(String name, String description, int idTask) {
+    public Task(String name, String description, int idTask, Duration duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.idTask = idTask;
         this.status = Status.NEW;
         this.typeTask = TypeTask.TASK;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
-    public Task(String name, String description, int idTask, Status status) {
+    public Task(String name, String description, int idTask, Duration duration, LocalDateTime startTime, Status status) {
         this.name = name;
         this.description = description;
         this.idTask = idTask;
         this.status = status;
         this.typeTask = TypeTask.TASK;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
     @Override
@@ -89,4 +101,19 @@ public class Task {
         this.typeTask = typeTask;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
 }

@@ -30,7 +30,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     protected void save() {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,duration,startTime,endTime,epic\n");
             for (Task task : super.getAllTasks()) {
                 writer.write(TaskConverter.toStringTask(task));
                 writer.write("\n");
