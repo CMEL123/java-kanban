@@ -29,7 +29,7 @@ class InMemoryHistoryManagerTest {
     void get() {
         InMemoryTaskManager manager = new InMemoryTaskManager();
         Task t1 = new Task("Задача1", "Задача1d", 1234, Duration.ofMinutes(100), LocalDateTime.now());
-        Epic e1 = new Epic("Эпик1", "Задача1d", 1424, Duration.ofMinutes(100), t1.getEndTime().plusMinutes(1) );
+        Epic e1 = new Epic("Эпик1", "Задача1d", 1424, Duration.ofMinutes(100), t1.getEndTime().plusMinutes(1));
 
         manager.addTask(t1);
         manager.addTask(e1);
