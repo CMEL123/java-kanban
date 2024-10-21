@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class BaseHttpHandler implements HttpHandler {
     TaskManager manager;
 
-    public BaseHttpHandler( TaskManager man) {
+    public BaseHttpHandler(TaskManager man) {
         manager = man;
     }
 
