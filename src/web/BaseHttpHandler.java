@@ -16,7 +16,8 @@ import java.util.ArrayList;
 
 public class BaseHttpHandler implements HttpHandler {
     TaskManager manager;
-    public BaseHttpHandler(TaskManager man) {
+
+    public BaseHttpHandler( TaskManager man) {
         manager = man;
     }
 
@@ -54,7 +55,7 @@ public class BaseHttpHandler implements HttpHandler {
                             response = gson.toJson(newTask);;
                         }
                     } else if (arrayPath.length == 4 && arrayPath[1].equals("epics") && arrayPath[3].equals("subtasks")) {
-                        ArrayList<Subtask> arrayListSubtask= manager.getSubtaskByEpic(idTask);
+                        ArrayList<Subtask> arrayListSubtask = manager.getSubtaskByEpic(idTask);
                         if (arrayListSubtask != null) {
                             code = 200;
                             response = gson.toJson(arrayListSubtask);
@@ -132,8 +133,10 @@ public class BaseHttpHandler implements HttpHandler {
     static class EpicTypeToken extends TypeToken<Epic> {
         // здесь ничего не нужно реализовывать
     }
+
     // вспомогательный класс для определения типа коллекции и типа её элементов
     static class SubtaskTypeToken extends TypeToken<Subtask> {
         // здесь ничего не нужно реализовывать
     }
+
 }
