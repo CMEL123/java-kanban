@@ -68,7 +68,7 @@ public class BaseHttpHandler implements HttpHandler {
 
                     if (task.getIdTask() == 0) {
                         Task newTask = manager.addTask(task);
-                        if (newTask == null){
+                        if (newTask == null) {
                             code = 406;
                             response = "Not Acceptable";
                         } else {
@@ -77,7 +77,7 @@ public class BaseHttpHandler implements HttpHandler {
                     } else {
                         Task newTask = manager.updateTask(task);
 
-                        if (newTask == null){
+                        if (newTask == null) {
                             code = 406;
                             response = "Not Acceptable";
                         } else {
@@ -90,7 +90,7 @@ public class BaseHttpHandler implements HttpHandler {
                     if (arrayPath.length == 3) {
                         Task newTask = manager.deleteTaskById(idTask);
 
-                        if (newTask == null){
+                        if (newTask == null) {
                             code = 406;
                             response = "Not Acceptable";
                         } else {
