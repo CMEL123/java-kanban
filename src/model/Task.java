@@ -14,19 +14,21 @@ public class Task {
     private LocalDateTime startTime; //дата и время начала выполнения задачи.
 
     public Task(String name, String description, int idTask, Duration duration, LocalDateTime startTime) {
-        this.name = name;
-        this.description = description;
-        this.idTask = idTask;
-        this.status = Status.NEW;
-        this.typeTask = TypeTask.TASK;
-        this.duration = duration;
-        this.startTime = startTime;
+        this(name,description,idTask,duration,startTime,Status.NEW);
+    }
+
+    public Task(String name, String description, Duration duration, LocalDateTime startTime) {
+        this(name,description,duration,startTime,Status.NEW);
     }
 
     public Task(String name, String description, int idTask, Duration duration, LocalDateTime startTime, Status status) {
+        this(name,description,duration,startTime,status);
+        this.idTask = idTask;
+    }
+
+    public Task(String name, String description, Duration duration, LocalDateTime startTime, Status status) {
         this.name = name;
         this.description = description;
-        this.idTask = idTask;
         this.status = status;
         this.typeTask = TypeTask.TASK;
         this.duration = duration;
