@@ -27,8 +27,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private int getIdentifier() {
-        identifier++;
-        return identifier;
+        return ++identifier;
     }
 
     @Override

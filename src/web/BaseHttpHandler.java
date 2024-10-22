@@ -1,142 +1,83 @@
 package web;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import converter.JsonTaskParser;
 import model.*;
 import service.TaskManager;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
-public class BaseHttpHandler implements HttpHandler {
+public class BaseHttpHandler {
     TaskManager manager;
+    Gson gson;
 
     public BaseHttpHandler(TaskManager man) {
         manager = man;
+        gson = HttpTaskServer.getGson();
     }
 
-    protected void sendText(HttpExchange h, Integer code, String text) throws IOException {
+    protected void sendText(HttpExchange exchange) throws IOException {
+        sendText(exchange, "");
+    }
+
+    protected void sendText(HttpExchange exchange, String text) throws IOException {
         byte[] resp = text.getBytes(StandardCharsets.UTF_8);
-        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        h.sendResponseHeaders(code, resp.length);
-        h.getResponseBody().write(resp);
-        h.close();
-    }
-
-    @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
-        String response = "";
-        int code = 404;
-
-        Gson gson = JsonTaskParser.gson;
-
-        try {
-            // извлеките метод из запроса
-            String method = httpExchange.getRequestMethod();
-            String[] arrayPath = httpExchange.getRequestURI().getPath().split("/");
-            int idTask = -1;
-            if (arrayPath.length > 2) idTask = Integer.parseInt(arrayPath[2]);
-
-            switch (method) {
-                case "GET":
-                    if (arrayPath.length == 2) {
-                        code = 200;
-                        response = gson.toJson(manager.getAllTasks());
-                    } else if (arrayPath.length == 3) {
-                        Task newTask = manager.getTaskById(idTask);
-                        if (newTask != null) {
-                            code = 200;
-                            response = gson.toJson(newTask);;
-                        }
-                    } else if (arrayPath.length == 4 && arrayPath[1].equals("epics") && arrayPath[3].equals("subtasks")) {
-                        ArrayList<Subtask> arrayListSubtask = manager.getSubtaskByEpic(idTask);
-                        if (arrayListSubtask != null) {
-                            code = 200;
-                            response = gson.toJson(arrayListSubtask);
-                        }
-                    }
-                    break;
-                case "POST":
-                    InputStream inputStream = httpExchange.getRequestBody();
-                    String subtitlesJson = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    Task task = getTaskFromJson(subtitlesJson, arrayPath[1], gson);
-
-                    if (task.getIdTask() == 0) {
-                        Task newTask = manager.addTask(task);
-                        if (newTask == null) {
-                            code = 406;
-                            response = "Not Acceptable";
-                        } else {
-                            code = 201;
-                        }
-                    } else {
-                        Task newTask = manager.updateTask(task);
-
-                        if (newTask == null) {
-                            code = 406;
-                            response = "Not Acceptable";
-                        } else {
-                            code = 201;
-                        }
-                    }
-                    break;
-
-                case "DELETE":
-                    if (arrayPath.length == 3) {
-                        Task newTask = manager.deleteTaskById(idTask);
-
-                        if (newTask == null) {
-                            code = 406;
-                            response = "Not Acceptable";
-                        } else {
-                            code = 200;
-                            response = "";
-                        }
-                    }
-                    break;
-                default:
-                    response = "Некорректный метод!";
-            }
-            sendText(httpExchange, code, response);
-
-        } catch (JsonSyntaxException exp) {
-            exp.printStackTrace();
-            System.out.println(exp.getMessage());
-            sendText(httpExchange, code, response);
+        exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+        if (resp.length == 0 ) {
+            exchange.sendResponseHeaders(201, 0);
+        } else {
+            exchange.sendResponseHeaders(200, resp.length);
         }
+        exchange.getResponseBody().write(resp);
+        exchange.close();
     }
 
-    private Task getTaskFromJson(String subtitlesJson, String typeTask, Gson gson) {
+    protected void sendNotFound(HttpExchange exchange) throws IOException {
+        String text = "Объект не был найден.";
+        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(404, 0);
+        exchange.getResponseBody().write(resp);
+        exchange.close();
+    }
+
+    protected void sendHasInteractions(HttpExchange exchange) throws IOException {
+        String text = "Задача пересекается с уже существующими.";
+        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(406, 0);
+        exchange.getResponseBody().write(resp);
+        exchange.close();
+    }
+
+    protected void sendException(HttpExchange exchange, String text) throws IOException {
+        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(500, 0);
+        exchange.getResponseBody().write(resp);
+        exchange.close();
+    }
+
+    public Task getTaskFromJson(String subtitlesJson, String typeTask, Gson gson) {
         if (typeTask.equals("tasks")) {
-            return gson.fromJson(subtitlesJson, new TaskTypeToken().getType());
+            return gson.fromJson(subtitlesJson, Task.class);
         } else if (typeTask.equals("epics")) {
-            return gson.fromJson(subtitlesJson, new EpicTypeToken().getType());
+            return gson.fromJson(subtitlesJson, Epic.class);
         } else if (typeTask.equals("subtasks")) {
-            return gson.fromJson(subtitlesJson, new SubtaskTypeToken().getType());
+            return gson.fromJson(subtitlesJson, Subtask.class);
         } else {
             return null;
         }
     }
 
-    // вспомогательный класс для определения типа коллекции и типа её элементов
-    static class TaskTypeToken extends TypeToken<Task> {
-        // здесь ничего не нужно реализовывать
-    }
-
-    // вспомогательный класс для определения типа коллекции и типа её элементов
-    static class EpicTypeToken extends TypeToken<Epic> {
-        // здесь ничего не нужно реализовывать
-    }
-
-    // вспомогательный класс для определения типа коллекции и типа её элементов
-    static class SubtaskTypeToken extends TypeToken<Subtask> {
-        // здесь ничего не нужно реализовывать
+    protected void send(HttpExchange exchange, int code, String text) throws IOException {
+        if (code == 200){
+            sendText(exchange, text);
+        } else if (code == 201){
+            sendText(exchange);
+        } else if (code == 406){
+            sendHasInteractions(exchange);
+        } else {
+            sendNotFound(exchange);
+        }
     }
 
 }

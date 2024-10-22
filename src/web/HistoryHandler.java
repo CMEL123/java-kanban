@@ -1,13 +1,12 @@
 package web;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import converter.JsonTaskParser;
+import com.sun.net.httpserver.HttpHandler;
 import service.TaskManager;
 
 import java.io.IOException;
 
-class HistoryHandler extends BaseHttpHandler {
+class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     public HistoryHandler(TaskManager managers) {
         super(managers);
     }
@@ -17,7 +16,6 @@ class HistoryHandler extends BaseHttpHandler {
         String response = "";
         int code = 404;
 
-        Gson gson = JsonTaskParser.gson;
         // извлеките метод из запроса
         String method = httpExchange.getRequestMethod();
         String[] arrayPath = httpExchange.getRequestURI().getPath().split("/");
@@ -32,6 +30,7 @@ class HistoryHandler extends BaseHttpHandler {
             default:
                 response = "Некорректный метод!";
         }
-        sendText(httpExchange, code, response);
+
+        send(httpExchange, code, response);
     }
 }

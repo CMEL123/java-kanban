@@ -11,11 +11,11 @@ public class DurationTypeAdapter extends TypeAdapter<Duration> {
 
     @Override
     public void write(final JsonWriter jsonWriter, final Duration duration) throws IOException {
-        jsonWriter.value(duration.toString());
+        jsonWriter.value(duration.toMinutes());
     }
 
     @Override
     public Duration read(final JsonReader jsonReader) throws IOException {
-        return Duration.parse(jsonReader.nextString());
+        return Duration.ofMinutes(jsonReader.nextInt());
     }
 }

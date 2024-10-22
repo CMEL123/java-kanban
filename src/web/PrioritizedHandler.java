@@ -1,13 +1,12 @@
 package web;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import converter.JsonTaskParser;
+import com.sun.net.httpserver.HttpHandler;
 import service.TaskManager;
 
 import java.io.IOException;
 
-class PrioritizedHandler extends BaseHttpHandler {
+class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
     public PrioritizedHandler(TaskManager managers) {
         super(managers);
     }
@@ -17,7 +16,6 @@ class PrioritizedHandler extends BaseHttpHandler {
         String response = "";
         int code = 404;
 
-        Gson gson = JsonTaskParser.gson;
         // извлеките метод из запроса
         String method = httpExchange.getRequestMethod();
         String[] arrayPath = httpExchange.getRequestURI().getPath().split("/");
@@ -31,6 +29,7 @@ class PrioritizedHandler extends BaseHttpHandler {
             default:
                 response = "Некорректный метод!";
         }
-        sendText(httpExchange, code, response);
+
+        send(httpExchange, code, response);
     }
 }
