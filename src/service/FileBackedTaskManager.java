@@ -84,9 +84,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
    }
 
     @Override
-    public void addTask(Task task) {
-        super.addTask(task);
-        save();
+    public Task addTask(Task task) {
+        Task newTask = super.addTask(task);
+        if (newTask != null) save();
+        return newTask;
     }
 
     @Override
@@ -108,15 +109,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
-        super.updateTask(task);
-        save();
+    public Task updateTask(Task task) {
+        Task newTask = super.updateTask(task);
+        if (newTask != null) save();
+        return newTask;
     }
 
     @Override
-    public void deleteTaskById(int id) {
-        super.deleteTaskById(id);
-        save();
+    public Task deleteTaskById(int id) {
+        Task newTask = super.deleteTaskById(id);
+        if (newTask != null) save();
+        return newTask;
     }
 
 }

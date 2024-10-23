@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public interface TaskManager {
 
     //Создание. Сам объект должен передаваться в качестве параметра.
-    public void addTask(Task task);
+    public Task addTask(Task task);
 
     //получать задачи по типу
     public ArrayList<Task> getAllTasks();
@@ -27,10 +27,10 @@ public interface TaskManager {
      public Task getTaskById(int id);
 
     //Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
-    public void updateTask(Task task);
+    public Task updateTask(Task task);
 
     //Удаление по идентификатору.
-    public void deleteTaskById(int id);
+    public Task deleteTaskById(int id);
 
     //Получение списка всех подзадач определённого эпика.
     public ArrayList<Subtask> getSubtaskByEpic(int epicID);
